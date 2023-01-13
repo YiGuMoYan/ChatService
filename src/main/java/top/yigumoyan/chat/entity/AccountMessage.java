@@ -29,7 +29,7 @@ public class AccountMessage implements Serializable {
      * id
      */
       @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 发送id

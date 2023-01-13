@@ -26,7 +26,7 @@ public class AccountGroupRelation implements Serializable {
     /**
      * id
      */
-      private Integer id;
+      private Long id;
 
     /**
      * 账户

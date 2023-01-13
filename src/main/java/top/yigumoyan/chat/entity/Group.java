@@ -24,7 +24,7 @@ public class Group implements Serializable {
     /**
      * 群聊id
      */
-      private Integer id;
+      private Long id;
 
     /**
      * 群聊昵称

@@ -24,7 +24,7 @@ public class Account implements Serializable {
     /**
      * 账号
      */
-      private Integer id;
+      private Long id;
 
     /**
      * 昵称
