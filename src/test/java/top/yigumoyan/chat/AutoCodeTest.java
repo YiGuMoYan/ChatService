@@ -1,6 +1,7 @@
 package top.yigumoyan.chat;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.IFill;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
@@ -34,15 +35,17 @@ public class AutoCodeTest {
                 })
                 .strategyConfig(builder -> {
                     List<IFill> columnList = new ArrayList<>();
-                    columnList.add(new Column("create_time", FieldFill.INSERT));
-                    columnList.add(new Column("update_time", FieldFill.INSERT_UPDATE));
-                    builder.addInclude("group_message")
-                            .entityBuilder()
+                    columnList.add(new Column("gmt_create", FieldFill.INSERT));
+                    columnList.add(new Column("gmt_modified", FieldFill.INSERT_UPDATE));
+                    builder.addInclude("GROUP");
+                    builder.entityBuilder()
                             .enableLombok()     // 启用 Lombok
                             .versionColumnName("version")   // 乐观锁
                             .logicDeletePropertyName("deleted")
                             .addTableFills(columnList)
-                    ;
+                            .idType(IdType.ASSIGN_ID);
+                    builder.mapperBuilder()
+                            .enableMapperAnnotation();
                 })
                 .execute();
     }
