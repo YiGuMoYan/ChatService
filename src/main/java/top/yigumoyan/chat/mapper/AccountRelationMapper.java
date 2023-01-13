@@ -1,5 +1,6 @@
 package top.yigumoyan.chat.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import top.yigumoyan.chat.entity.AccountRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author 忆古陌烟
  * @since 2023-01-13
  */
+@Mapper
 public interface AccountRelationMapper extends BaseMapper<AccountRelation> {
 
 }
