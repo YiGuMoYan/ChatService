@@ -37,7 +37,7 @@ public class AutoCodeTest {
                     List<IFill> columnList = new ArrayList<>();
                     columnList.add(new Column("gmt_create", FieldFill.INSERT));
                     columnList.add(new Column("gmt_modified", FieldFill.INSERT_UPDATE));
-                    builder.addInclude("GROUP");
+                    builder.addInclude("account");
                     builder.entityBuilder()
                             .enableLombok()     // 启用 Lombok
                             .versionColumnName("version")   // 乐观锁

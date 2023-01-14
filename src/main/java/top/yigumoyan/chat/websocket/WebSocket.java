@@ -1,50 +1,57 @@
 package top.yigumoyan.chat.websocket;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.xml.sax.helpers.AttributesImpl;
-import top.yigumoyan.chat.entity.Account;
-import top.yigumoyan.chat.mapper.AccountMapper;
+import top.yigumoyan.chat.entity.AccountOnline;
+import top.yigumoyan.chat.service.Impl.AccountOnlineServiceImpl;
 import top.yigumoyan.chat.service.Impl.AccountServiceImpl;
 
-import javax.websocket.*;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 @Slf4j
-@ServerEndpoint("/websocket/{id}")
+@ServerEndpoint("/login/{accountId}")
 public class WebSocket {
 
+    private static AccountServiceImpl accountService;
+    private static AccountOnlineServiceImpl accountOnlineService;
+
     @Autowired
-    private AccountServiceImpl accountService;
+    public void setPersonService(AccountServiceImpl accountService, AccountOnlineServiceImpl accountOnlineService) {
+        WebSocket.accountService = accountService;
+        WebSocket.accountOnlineService = accountOnlineService;
+    }
 
-    private Session session;
-    private String id;
+    private String accountId;
 
-    private static final CopyOnWriteArraySet<WebSocket> webSockets = new CopyOnWriteArraySet<>();
     private static final ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<String, Session>();
 
     @OnOpen
-    public void onOpen(Session session, @PathParam(value = "id") Long accountId, @PathParam(value = "id") String accountPassword) {
-        // 测试环境，暂时不检索是否在 账号数据库中
-        // 这里用于防止其他连接
-        //if (accountService.selectAccountById(userId) != null) {
+    public void onOpen(Session session, @PathParam(value = "accountId") String accountId) {
         try {
-            Account account = new Account();
-            account.setId(accountId);
-            account.setPassword(accountPassword);
+            // 判断账户是否在 Session 池中
+            // 如果再 Session 池中，则为重复登录
+            if (sessionPool.get(accountId) == null) {
+                this.accountId = accountId;
+                sessionPool.put(accountId, session);
+                // 添加到在线数据库
+                addAccountOnline();
+                System.out.println("连接成功");
+            } else {
+                session.close();
+                System.out.println("连接失败");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //}
     }
 
     @OnError
@@ -55,12 +62,18 @@ public class WebSocket {
 
     @OnClose
     public void onClose() {
-        if (webSockets.contains(this)) {
-            webSockets.remove(this);
-        }
-        if (id != null && sessionPool.containsKey(id)) {
-            sessionPool.remove(id);
-        }
-        log.info("有用户退出，当前在线列表:" + sessionPool);
+        deleteAccountOnline();
+    }
+
+    public void addAccountOnline() {
+        AccountOnline accountOnline = new AccountOnline();
+        accountOnline.setAccountId(Long.valueOf(this.accountId));
+        accountOnlineService.save(accountOnline);
+    }
+
+    public void deleteAccountOnline() {
+        QueryWrapper<AccountOnline> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("account_id", this.accountId);
+        accountOnlineService.remove(queryWrapper);
     }
 }
