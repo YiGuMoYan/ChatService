@@ -37,8 +37,7 @@ public class AccountController {
     public Result login(@RequestBody Account account) {
         // 验证账号密码
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", account.getId())
-                .eq("password", account.getPassword());
+        queryWrapper.eq("id", account.getId()).eq("password", account.getPassword());
         Account result = accountService.getOne(queryWrapper);
         // 判断账号密码是否正确
         if (result != null) {
