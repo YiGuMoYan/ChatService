@@ -35,12 +35,12 @@ public class AccountRelation implements Serializable {
     /**
      * 账户1
      */
-    private Long accountId1;
+    private String accountId1;
 
     /**
      * 账户2
      */
-    private Long accountId2;
+    private String accountId2;
 
     /**
      * 关系类型

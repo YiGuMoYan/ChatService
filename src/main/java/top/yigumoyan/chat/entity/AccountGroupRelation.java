@@ -35,12 +35,12 @@ public class AccountGroupRelation implements Serializable {
     /**
      * 账户
      */
-    private Long accountId;
+    private String accountId;
 
     /**
      * 群聊
      */
-    private Long groupId;
+    private String groupId;
 
     /**
      * 乐观锁

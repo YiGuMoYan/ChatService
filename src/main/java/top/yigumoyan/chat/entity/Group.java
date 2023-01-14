@@ -29,7 +29,7 @@ public class Group implements Serializable {
      * 群聊id
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     /**
      * 群聊昵称
@@ -39,7 +39,7 @@ public class Group implements Serializable {
     /**
      * 群主id
      */
-    private Long ownerId;
+    private String ownerId;
 
     /**
      * 乐观锁

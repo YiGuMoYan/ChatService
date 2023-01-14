@@ -35,12 +35,12 @@ public class AccountMessage implements Serializable {
     /**
      * 发送id
      */
-    private Long fromId;
+    private String fromId;
 
     /**
      * 接收id
      */
-    private Long toId;
+    private String toId;
 
     /**
      * 是否查阅

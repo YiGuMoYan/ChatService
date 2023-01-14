@@ -35,12 +35,12 @@ public class GroupMessage implements Serializable {
     /**
      * 群聊id
      */
-    private Long groupId;
+    private String groupId;
 
     /**
      * 账户id
      */
-    private Long accountId;
+    private String accountId;
 
     /**
      * 消息内容

@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +30,8 @@ public class Account implements Serializable {
     /**
      * 账号
      */
-      @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private String id;
 
     /**
      * 昵称
@@ -72,13 +74,13 @@ public class Account implements Serializable {
      * 创建时间
      */
       @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime gmtCreate;
+    private Date gmtCreate;
 
     /**
      * 修改时间
      */
       @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime gmtModified;
+    private Date gmtModified;
 
     /**
      * token值
@@ -88,7 +90,7 @@ public class Account implements Serializable {
     /**
      * 上一次请求时间
      */
-    private LocalDateTime gmtToken;
+    private Date gmtToken;
 
 
 }
