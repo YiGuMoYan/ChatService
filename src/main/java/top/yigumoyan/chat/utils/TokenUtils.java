@@ -21,10 +21,15 @@ public class TokenUtils {
         TokenUtils.accountService = accountService;
     }
 
+    /**
+     * 验证 token 是否合法
+     * @param account
+     * @return
+     */
     public static Boolean isToken(Account account) {
         // 验证 token
         QueryWrapper<Account> queryWrapperToken = new QueryWrapper<>();
-        queryWrapperToken.select("gmt_token")
+        queryWrapperToken.select("id", "gmt_token")
                 .eq("token", account.getToken());
         Account result = accountService.getOne(queryWrapperToken);
         // Token 验证成功

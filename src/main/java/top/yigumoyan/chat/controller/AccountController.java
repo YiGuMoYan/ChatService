@@ -70,34 +70,12 @@ public class AccountController {
     }
 
     /**
-     * 获取用户信息
+     * 获取用户昵称
      *
-     * @param account 自身用户
+     * @param account 账号
      * @param id 目标id
-     * @return 查询到的 account 对象
+     * @return 目标昵称
      */
-    @PostMapping("/getAccountMessage/{id}")
-    public Result getAccountMessage(@RequestBody Account account, @PathVariable String id) {
-        if (TokenUtils.isToken(account)) {
-            System.out.println("Token 正确");
-            // 更新 Token 时间
-            account.setGmtToken(new Date());
-            accountService.updateById(account);
-            // 查询目标信息
-            account = new Account();
-            account.setId(id);
-            account = accountService.getById(account);
-            // 查询到对应用户
-            if (account != null) {
-                return Result.ok(account);
-            } else {
-                return Result.ok(false);
-            }
-        }
-        return Result.fail();
-    }
-
-
     @PostMapping("/getAccountName/{id}")
     public Result getAccountName(@RequestBody Account account, @PathVariable String id) {
         if (TokenUtils.isToken(account)) {
@@ -109,6 +87,28 @@ public class AccountController {
             }
             return Result.ok(false);
         }
+        return Result.fail();
+    }
+
+    /**
+     * 获取个人信息
+     *
+     * @param account 账号
+     * @return 个人信息
+     */
+    @PostMapping("/getAccount")
+    public Result getAccount(@RequestBody Account account) {
+        // 验证 token
+        QueryWrapper<Account> queryWrapperToken = new QueryWrapper<>();
+        queryWrapperToken.select("id", "name", "sex", "state", "gmt_token")
+                .eq("token", account.getToken());
+        Account result = accountService.getOne(queryWrapperToken);
+        // Token 验证成功
+         if (result != null && DateUtils.getDays(new Date(), result.getGmtToken()) < 3) {
+             result.setGmtToken(new Date());
+             accountService.updateById(result);
+             return Result.ok(result);
+         }
         return Result.fail();
     }
 }

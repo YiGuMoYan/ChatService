@@ -7,6 +7,7 @@ import top.yigumoyan.chat.entity.Account;
 import top.yigumoyan.chat.entity.AccountRelation;
 import top.yigumoyan.chat.result.Result;
 import top.yigumoyan.chat.service.Impl.AccountRelationServiceImpl;
+import top.yigumoyan.chat.service.Impl.AccountServiceImpl;
 import top.yigumoyan.chat.utils.TokenUtils;
 
 import javax.annotation.Resource;
@@ -30,9 +31,15 @@ public class AccountRelationController {
     @Resource
     private AccountRelationServiceImpl accountRelationService;
 
+    @Resource
+    private AccountServiceImpl accountService;
+
     @PostMapping("/getAccountRelation")
     public Result getAccountRelation(@RequestBody Account account) {
         if (TokenUtils.isToken(account)) {
+            QueryWrapper<Account> queryWrapperAccountId = new QueryWrapper<>();
+            queryWrapperAccountId.select("id", "token").eq("token", account.getToken());
+            account = accountService.getOne(queryWrapperAccountId);
             QueryWrapper<AccountRelation> queryWrapperAccountRelation = new QueryWrapper<>();
             queryWrapperAccountRelation.eq("account_id1", account.getId())
                     .or()
