@@ -36,10 +36,7 @@ public class AccountRelationController {
 
     @PostMapping("/getAccountRelation")
     public Result getAccountRelation(@RequestBody Account account) {
-        if (TokenUtils.isToken(account)) {
-            QueryWrapper<Account> queryWrapperAccountId = new QueryWrapper<>();
-            queryWrapperAccountId.select("id", "token").eq("token", account.getToken());
-            account = accountService.getOne(queryWrapperAccountId);
+        if ((account = TokenUtils.getAccountMessageByToken(account.getToken())) != null) {
             QueryWrapper<AccountRelation> queryWrapperAccountRelation = new QueryWrapper<>();
             queryWrapperAccountRelation.eq("account_id1", account.getId())
                     .or()

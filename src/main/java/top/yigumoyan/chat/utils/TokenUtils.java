@@ -36,6 +36,17 @@ public class TokenUtils {
         return result != null && DateUtils.getDays(new Date(), result.getGmtToken()) < 3;
     }
 
+    public static Account getAccountMessageByToken(String token) {
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "name", "token", "gmt_token")
+                .eq("token", token);
+        Account account = accountService.getOne(queryWrapper);
+        if (account != null && DateUtils.getDays(new Date(), account.getGmtToken()) < 3) {
+            return account;
+        }
+        return null;
+    }
+
 
     /**
      * 获取账号 Token
